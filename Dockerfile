@@ -8,16 +8,13 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update &&\
     apt-get install -y curl lib32gcc1
 
-RUN useradd -ms /bin/bash steamcmd
+RUN useradd -ms /bin/bash steamuser
+ENV HOME /home/steamuser
+USER steamuser
 
 # Download and extract SteamCMD
-RUN mkdir -p /home/steamuser/steamcmd &&\
-    curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -v -C /home/steamuser/steamcmd -zx && \
-    chown -R steamuser /home/steamuser
-
-ENV HOME /home/steamuser
-WORKDIR /home/steamuser/steamcmd
-USER steamuser
+RUN mkdir -p /home/steamuser/steamcmd && \
+    curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -v -C /home/steamuser/steamcmd -zx 
 
 RUN echo 'login anonymous\nforce_install_dir ../csgo_ds\napp_update 740 validate\nquit' > /home/steamuser/steamcmd/install.txt
 ONBUILD RUN ./steamcmd.sh +runscript install.txt
