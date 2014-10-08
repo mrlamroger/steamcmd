@@ -8,11 +8,14 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update &&\
     apt-get install -y curl lib32gcc1
 
+RUN useradd -ms /bin/bash steamcmd
+
 # Download and extract SteamCMD
 RUN mkdir -p /home/steamuser/steamcmd &&\
     curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -v -C /home/steamuser/steamcmd -zx && \
-    chown -R steamuser:steamuser /home/steamuser
+    chown -R steamuser /home/steamuser
 
+ENV HOME /home/steamuser
 WORKDIR /home/steamuser/steamcmd
 USER steamuser
 
