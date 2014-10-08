@@ -9,11 +9,12 @@ RUN apt-get update &&\
     apt-get install -y curl lib32gcc1
 
 # Download and extract SteamCMD
-RUN mkdir -p /opt/steamcmd &&\
-    cd /opt/steamcmd &&\
-    curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -vxz
+RUN mkdir -p /home/steamuser/steamcmd &&\
+    curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -v -C /home/steamuser/steamcmd -zx && \
+    chown -R steamuser:steamuser /home/steamuser
 
-WORKDIR /opt/steamcmd
+WORKDIR /home/steamuser/steamcmd
+USER steamuser
 
-# This container will be executable
-ENTRYPOINT ["./steamcmd.sh"]
+RUN echo 'login anonymous\nforce_install_dir ../csgo_ds\napp_update 740 validate\nquit' > /home/steamuser/steamcmd/install.txt
+ONBUILD RUN ./steamcmd.sh +runscript install.txt
