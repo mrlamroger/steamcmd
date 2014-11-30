@@ -22,3 +22,5 @@ WORKDIR /home/steamuser/steamcmd
 
 RUN printf "login anonymous\nforce_install_dir ../csgo\napp_update 740 validate\nquit" > /home/steamuser/steamcmd/install.txt
 RUN ./steamcmd.sh +runscript install.txt
+
+EXPOSE 27015
